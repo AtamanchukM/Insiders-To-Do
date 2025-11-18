@@ -15,6 +15,9 @@ import {
     doc,
 } from 'firebase/firestore'
 
+import AddNewTodoList from '../components/AddNewTodoList'
+
+
 type Todo = {
     id: string
     text: string
@@ -25,7 +28,6 @@ type Todo = {
 const TodoSchema = Yup.object().shape({
     text: Yup.string().trim().required('Task cannot be empty')
 })
-
 export default function TodoList() {
     const { user, logout } = useAuthStore((s) => s)
     const [todos, setTodos] = useState<Todo[]>([])
@@ -36,7 +38,7 @@ export default function TodoList() {
         if (!user) return
 
         const fetchTodos = async () => {
-            const q = query(collection(db, 'todos'), where('userId', '==', user.uid))
+            const q = query(collection(db, 'insiders'), where('userId', '==', user.uid))
             const snapshot = await getDocs(q)
             const todosData: Todo[] = snapshot.docs.map((doc) => ({
                 id: doc.id,
@@ -53,7 +55,7 @@ export default function TodoList() {
     // 🔹 Додавання нового завдання
     const addTodo = async (text: string) => {
         if (!user) return
-        const docRef = await addDoc(collection(db, 'todos'), {
+        const docRef = await addDoc(collection(db, 'insiders'), {
             text,
             completed: false,
             userId: user.uid,
@@ -63,7 +65,7 @@ export default function TodoList() {
 
     // 🔹 Редагування завдання
     const updateTodo = async (id: string, text: string, completed?: boolean) => {
-        const todoRef = doc(db, 'todos', id)
+        const todoRef = doc(db, 'insiders', id)
         const todo = todos.find((t) => t.id === id)
         if (!todo) return
         const updatedTodo = { ...todo, text, completed: completed ?? todo.completed }
@@ -74,7 +76,7 @@ export default function TodoList() {
 
     // 🔹 Видалення завдання
     const deleteTodo = async (id: string) => {
-        const todoRef = doc(db, 'todos', id)
+        const todoRef = doc(db, 'insiders', id)
         await deleteDoc(todoRef)
         setTodos((prev) => prev.filter((t) => t.id !== id))
     }

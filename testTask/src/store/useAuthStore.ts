@@ -65,3 +65,5 @@ onAuthStateChanged(auth, (firebaseUser) => {
         useAuthStore.getState().setUser(null)
     }
 })
+
+

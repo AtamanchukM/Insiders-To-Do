@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebaseConfig'
 
+
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
         .email('Невірний email')
@@ -13,6 +14,7 @@ const LoginSchema = Yup.object().shape({
         .required('Пароль обов’язковий'),
 })
 
+
 export default function Login() {
     const navigate = useNavigate()
 
@@ -20,8 +22,6 @@ export default function Login() {
         <section className="h-screen flex items-center justify-center bg-gray-100 text-black">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-                <p>Login: admin@gmail.com</p>
-                <p>password: admin111</p>
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     validationSchema={LoginSchema}
@@ -34,7 +34,6 @@ export default function Login() {
                                 values.password
                             )
 
-                            console.log('Logged in:', userCredential.user)
                             navigate('/todo')
                         } catch (err: any) {
                             console.error('Login error:', err)

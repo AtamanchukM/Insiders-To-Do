@@ -14,7 +14,6 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/todo" element={<ProtectedRoute><TodoList /></ProtectedRoute>} />
         <Route path="*" element={<Login />} />
-
       </Routes>
     </Router>
   )
