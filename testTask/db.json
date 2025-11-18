@@ -1,0 +1,48 @@
+{
+  "users": [
+    {
+      "id": "7372",
+      "name": "maks",
+      "email": "maks@gmail.com",
+      "password": "222"
+    },
+    {
+      "id": "ab4a",
+      "name": "sss",
+      "email": "Maks@gmail.com",
+      "password": "111"
+    },
+    {
+      "id": 1760481553915,
+      "name": "makaka",
+      "email": "maksumatmn@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": 1760481757573,
+      "name": "Piska",
+      "email": "babazhaba@gmail.com",
+      "password": "1234567"
+    }
+  ],
+  "todos": [
+    {
+      "id": "a333",
+      "text": " ",
+      "completed": false,
+      "userId": "ab4a"
+    },
+    {
+      "id": "8026",
+      "text": "22",
+      "completed": false,
+      "userId": "ab4a"
+    },
+    {
+      "id": "8d71",
+      "text": "віфвфі",
+      "completed": true,
+      "userId": 1760481553915
+    }
+  ]
+}
