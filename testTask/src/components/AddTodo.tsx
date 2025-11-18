@@ -1,22 +1,54 @@
-// import { addDoc, collection } from 'firebase/firestore'
-// import { db } from '../firebaseConfig'
-// import { useAuthStore } from '../store/useAuthStore'
-// import { useState } from 'react'
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import { useAuthStore } from '../store/useAuthStore';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { TodoSchema } from '../pages/TodoList';
+import type { Todo } from '../pages/TodoList';
 
-// export default function AddTodo() {
+interface AddTodoProps {
+    onAdd: (todo: Todo) => void;
+}
 
-//      const addTodo = async (text: string) => {
-//         if (!user) return
-//         const docRef = await addDoc(collection(db, 'insiders'), {
-//             text,
-//             completed: false,
-//             userId: user.uid,
-//         })
-//         setTodos([...todos, { id: docRef.id, text, completed: false, userId: user.uid }])
-//     }
-//   return (
-//     <div>
-      
-//     </div>
-//   )
-// }
+export default function AddTodo({ onAdd }: AddTodoProps) {
+    const { user } = useAuthStore((s) => s);
+
+    const addTodo = async (text: string) => {
+        if (!user) return;
+        const docRef = await addDoc(collection(db, 'insiders'), {
+            text,
+            completed: false,
+            userId: user.uid,
+        });
+        onAdd({ id: docRef.id, text, completed: false, userId: user.uid });
+    };
+
+    return (
+        <Formik
+            initialValues={{ text: '' }}
+            validationSchema={TodoSchema}
+            onSubmit={async (values, { resetForm }) => {
+                await addTodo(values.text);
+                resetForm();
+            }}
+        >
+            <Form className="space-y-4 flex flex-col">
+                <Field
+                    name="text"
+                    placeholder="Enter your task"
+                    className="w-full border border-gray-300 p-2 rounded-xl"
+                />
+                <ErrorMessage
+                    name="text"
+                    component="div"
+                    className="text-red-500 text-sm"
+                />
+                <button
+                    type="submit"
+                    className="bg-black hover:bg-black/70 text-white font-bold py-2 px-4 rounded-xl"
+                >
+                    Add Task
+                </button>
+            </Form>
+        </Formik>
+    );
+}

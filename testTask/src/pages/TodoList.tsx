@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+
+import AddTodo from '../components/AddTodo'
+import ChangeTodo from '../components/ChangeTodo'
+import RemoveTodo from '../components/RemoveTodo'
+
+
 import * as Yup from 'yup'
 import { CiEdit } from 'react-icons/ci'
 import { db } from '../firebaseConfig'
 import {
     collection,
-    addDoc,
     getDocs,
+    addDoc,
     query,
     where,
     updateDoc,
@@ -15,17 +20,16 @@ import {
     doc,
 } from 'firebase/firestore'
 
-import AddNewTodoList from '../components/AddNewTodoList'
 
 
-type Todo = {
+export type Todo = {
     id: string
     text: string
     completed: boolean
     userId: string
 }
 
-const TodoSchema = Yup.object().shape({
+export const TodoSchema = Yup.object().shape({
     text: Yup.string().trim().required('Task cannot be empty')
 })
 export default function TodoList() {
@@ -52,41 +56,18 @@ export default function TodoList() {
         fetchTodos()
     }, [user])
 
-    // 🔹 Додавання нового завдання
-    const addTodo = async (text: string) => {
-        if (!user) return
-        const docRef = await addDoc(collection(db, 'insiders'), {
-            text,
-            completed: false,
-            userId: user.uid,
-        })
-        setTodos([...todos, { id: docRef.id, text, completed: false, userId: user.uid }])
-    }
 
-    // 🔹 Редагування завдання
-    const updateTodo = async (id: string, text: string, completed?: boolean) => {
-        const todoRef = doc(db, 'insiders', id)
-        const todo = todos.find((t) => t.id === id)
-        if (!todo) return
-        const updatedTodo = { ...todo, text, completed: completed ?? todo.completed }
-        await updateDoc(todoRef, updatedTodo)
-        setTodos((prev) => prev.map((t) => (t.id === id ? updatedTodo : t)))
-        setEditingId(null)
+    // 🔹 Оновлення завдання після редагування
+    const handleUpdated = (updatedTodo: Todo) => {
+        setTodos((prev) => prev.map((t) => (t.id === updatedTodo.id ? updatedTodo : t)));
+        setEditingId(null);
     }
 
     // 🔹 Видалення завдання
-    const deleteTodo = async (id: string) => {
-        const todoRef = doc(db, 'insiders', id)
-        await deleteDoc(todoRef)
-        setTodos((prev) => prev.filter((t) => t.id !== id))
+    const handleRemoved = (id: string) => {
+        setTodos((prev) => prev.filter((t) => t.id !== id));
     }
 
-    // 🔹 Зміна статусу completed
-    const toggleCompleted = async (id: string) => {
-        const todo = todos.find((t) => t.id === id)
-        if (!todo) return
-        await updateTodo(id, todo.text, !todo.completed)
-    }
 
     return (
         <section className="h-screen flex items-center justify-center bg-gray-100 text-black">
@@ -94,33 +75,7 @@ export default function TodoList() {
                 <h2 className="text-2xl font-bold mb-6 text-center">Todo List</h2>
          
                 {/* 🔹 Додати нове завдання */}
-                <Formik
-                    initialValues={{ text: '' }}
-                    validationSchema={TodoSchema}
-                    onSubmit={async (values, { resetForm }) => {
-                        await addTodo(values.text)
-                        resetForm()
-                    }}
-                >
-                    <Form className="space-y-4 flex flex-col">
-                        <Field
-                            name="text"
-                            placeholder="Enter your task"
-                            className="w-full border border-gray-300 p-2 rounded-xl"
-                        />
-                        <ErrorMessage
-                            name="text"
-                            component="div"
-                            className="text-red-500 text-sm"
-                        />
-                        <button
-                            type="submit"
-                            className="bg-black hover:bg-black/70 text-white font-bold py-2 px-4 rounded-xl"
-                        >
-                            Add Task
-                        </button>
-                    </Form>
-                </Formik>
+                <AddTodo onAdd={(todo) => setTodos((prev) => [...prev, todo])} />
 
                 {/* 🔹 Список завдань */}
                 <ul className="mt-6 space-y-2">
@@ -133,42 +88,17 @@ export default function TodoList() {
                                 className="p-4 border border-gray-300 rounded-xl flex justify-between items-center gap-2"
                             >
                                 {editingId === todo.id ? (
-                                    <Formik
-                                        initialValues={{ text: todo.text }}
-                                        validationSchema={TodoSchema}
-                                        onSubmit={async (values) => updateTodo(todo.id, values.text, todo.completed)}
-                                    >
-                                        <Form className="flex flex-1 gap-2 items-center">
-                                            <Field
-                                                name="text"
-                                                className="flex-1 border border-gray-300 p-2 rounded-xl"
-                                            />
-                                            <ErrorMessage
-                                                name="text"
-                                                component="div"
-                                                className="text-red-500 text-sm"
-                                            />
-                                            <button
-                                                type="submit"
-                                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-xl"
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => setEditingId(null)}
-                                                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-3 rounded-xl"
-                                            >
-                                                Cancel
-                                            </button>
-                                        </Form>
-                                    </Formik>
+                                    <ChangeTodo
+                                        todo={todo}
+                                        onUpdated={handleUpdated}
+                                        onCancel={() => setEditingId(null)}
+                                    />
                                 ) : (
                                     <>
                                         <input
                                             type="checkbox"
                                             checked={todo.completed}
-                                            onChange={() => toggleCompleted(todo.id)}
+                                            disabled
                                             className="mr-2"
                                         />
                                         <button
@@ -182,12 +112,7 @@ export default function TodoList() {
                                         >
                                             {todo.text}
                                         </span>
-                                        <button
-                                            onClick={() => deleteTodo(todo.id)}
-                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-xl"
-                                        >
-                                            Delete
-                                        </button>
+                                        <RemoveTodo id={todo.id} onRemoved={handleRemoved} />
                                     </>
                                 )}
                             </li>
