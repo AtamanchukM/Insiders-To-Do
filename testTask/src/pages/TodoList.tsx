@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 
-import AddTodo from "../components/AddTodo";
-import ChangeTodo from "../components/ChangeTodo";
-import RemoveTodo from "../components/RemoveTodo";
+import AddTodo from "./AddTodo";
+import ChangeTodo from "./ChangeTodo";
+import RemoveTodo from "./RemoveTodo";
 
 import * as Yup from "yup";
 import { CiEdit } from "react-icons/ci";

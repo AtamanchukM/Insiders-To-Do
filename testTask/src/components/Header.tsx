@@ -7,7 +7,7 @@ export default function Header() {
   const name = user?.userName || "Guest";
 
   return (
-    <header className="bg-[#3b5360] text-white p-4 flex justify-end items-center gap-8">
+    <header className="bg-[#cc70ea]/10 text-white p-4 flex justify-end items-center gap-8 mb-5">
       <h1 className="text-2xl font-bold">{name}</h1>
       <button
         onClick={logout}

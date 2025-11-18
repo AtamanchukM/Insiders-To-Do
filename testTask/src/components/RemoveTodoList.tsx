@@ -24,7 +24,7 @@ export default function RemoveTodoList({ id, onRemoved }: RemoveTodoListProps) {
       className=" text-gray-700 hover:text-red-500 font-bold py-1 px-3 rounded-xl"
       disabled={loading}
     >
-      <CiTrash size={20} />
+      <CiTrash size={20} className="text-[#d8ade7]" />
     </button>
   );
 }

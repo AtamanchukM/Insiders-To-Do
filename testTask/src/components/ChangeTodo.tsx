@@ -1,6 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TodoSchema } from "../pages/TodoList";
-import type { Todo } from "../pages/TodoList";
+import { TodoSchema } from "./TodoList";
+import type { Todo } from "./TodoList";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 

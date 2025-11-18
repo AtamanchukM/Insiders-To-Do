@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AddNewTodoList from "../components/AddNewTodoList";
 import RemoveTodoList from "../components/RemoveTodoList";
-import TodoList from "./TodoList";
+import TodoList from "../components/TodoList";
 import { db } from "../firebaseConfig";
 import {
   collection,
@@ -64,7 +64,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex border justify-center flex-col max-w-7xl mx-auto p-4">
+    <div className="flex  bg-[#27485a] justify-center shadow-md shadow-fuchsia-400 flex-col max-w-7xl mx-auto p-4">
       <AddNewTodoList onAdd={handleAdd} />
       <ul className="flex flex-wrap justify-center  gap-4">
         {todoLists.map((list) => (

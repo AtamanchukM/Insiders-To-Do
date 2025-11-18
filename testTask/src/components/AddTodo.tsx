@@ -2,8 +2,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useAuthStore } from "../store/useAuthStore";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { TodoSchema } from "../pages/TodoList";
-import type { Todo } from "../pages/TodoList";
+import { TodoSchema } from "./TodoList";
+import type { Todo } from "./TodoList";
 
 interface AddTodoProps {
   onAdd: (todo: Todo) => void;
@@ -38,7 +38,7 @@ export default function AddTodo({ onAdd, listId }: AddTodoProps) {
         <Field
           name="text"
           placeholder="Enter your task"
-          className="w-full border border-gray-300 p-2 rounded-xl "
+          className="w-full border border-[#cc70ea] p-2 rounded-xl "
         />
         <ErrorMessage
           name="text"
@@ -49,7 +49,7 @@ export default function AddTodo({ onAdd, listId }: AddTodoProps) {
           name="description"
           as="textarea"
           placeholder="Опис (необов'язково)"
-          className="w-full border border-gray-300 p-2 rounded-xl text-sm min-h-[60px]"
+          className="w-full border border--300 p-2 rounded-xl text-sm min-h-[60px]"
         />
         <ErrorMessage
           name="description"
@@ -58,7 +58,7 @@ export default function AddTodo({ onAdd, listId }: AddTodoProps) {
         />
         <button
           type="submit"
-          className="bg-black hover:bg-black/70 text-white font-bold py-2 px-4 rounded-xl"
+          className="bg-[#cc70ea]/20 hover:bg-[#cc70ea]/40 transition cursor-pointer text-[#d8ade7] font-bold py-2 px-4 rounded-xl"
         >
           Add Task
         </button>

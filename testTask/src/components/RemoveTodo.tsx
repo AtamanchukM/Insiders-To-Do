@@ -17,9 +17,9 @@ export default function RemoveTodo({ id, listId, onRemoved }: RemoveTodoProps) {
   return (
     <button
       onClick={handleRemove}
-      className=" hover:text-red-500 text-gray-700 font-bold py-1 p-1 transition-colors "
+      className=" hover:text-red-500 text-[#d8ade7] font-bold py-1 p-1 transition-colors "
     >
-        <CiTrash size={20} />
+        <CiTrash size={20}  />
     </button>
   );
 }
