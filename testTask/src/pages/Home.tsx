@@ -64,9 +64,9 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="flex border justify-center flex-col max-w-7xl mx-auto p-4">
       <AddNewTodoList onAdd={handleAdd} />
-      <ul className="flex flex-wrap  gap-4">
+      <ul className="flex flex-wrap justify-center  gap-4">
         {todoLists.map((list) => (
           <div key={list.id} className="mb-4">
             <div className="flex items-center gap-2 mb-2"></div>

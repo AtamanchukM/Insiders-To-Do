@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { CiTrash } from "react-icons/ci";
+
 
 interface RemoveTodoListProps {
   id: string;
@@ -19,10 +21,10 @@ export default function RemoveTodoList({ id, onRemoved }: RemoveTodoListProps) {
   return (
     <button
       onClick={handleRemove}
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-xl"
+      className=" text-gray-700 hover:text-red-500 font-bold py-1 px-3 rounded-xl"
       disabled={loading}
     >
-      {loading ? "Видаляється..." : "Видалити список"}
+      <CiTrash size={20} />
     </button>
   );
 }

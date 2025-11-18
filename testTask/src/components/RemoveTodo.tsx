@@ -1,5 +1,7 @@
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { CiTrash } from "react-icons/ci";
+
 
 interface RemoveTodoProps {
   id: string;
@@ -15,9 +17,9 @@ export default function RemoveTodo({ id, listId, onRemoved }: RemoveTodoProps) {
   return (
     <button
       onClick={handleRemove}
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-xl"
+      className=" hover:text-red-500 text-gray-700 font-bold py-1 p-1 transition-colors "
     >
-      Delete
+        <CiTrash size={20} />
     </button>
   );
 }

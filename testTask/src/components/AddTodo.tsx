@@ -13,34 +13,46 @@ interface AddTodoProps {
 export default function AddTodo({ onAdd, listId }: AddTodoProps) {
   const { user } = useAuthStore((s) => s);
 
-  const addTodo = async (text: string) => {
+  const addTodo = async (text: string, description: string) => {
     if (!user) return;
     // Додаємо задачу у підколекцію конкретного списку
     const docRef = await addDoc(collection(db, "todoLists", listId, "todos"), {
       text,
+      description,
       completed: false,
       userId: user.uid,
     });
-    onAdd({ id: docRef.id, text, completed: false, userId: user.uid });
+    onAdd({ id: docRef.id, text, description, completed: false, userId: user.uid });
   };
 
   return (
     <Formik
-      initialValues={{ text: "" }}
+      initialValues={{ text: "", description: "" }}
       validationSchema={TodoSchema}
       onSubmit={async (values, { resetForm }) => {
-        await addTodo(values.text);
-        resetForm();
+        await addTodo(values.text, values.description);
+        resetForm(); // очищає і text, і description
       }}
     >
       <Form className="space-y-4 flex flex-col">
         <Field
           name="text"
           placeholder="Enter your task"
-          className="w-full border border-gray-300 p-2 rounded-xl"
+          className="w-full border border-gray-300 p-2 rounded-xl "
         />
         <ErrorMessage
           name="text"
+          component="div"
+          className="text-red-500 text-sm"
+        />
+        <Field
+          name="description"
+          as="textarea"
+          placeholder="Опис (необов'язково)"
+          className="w-full border border-gray-300 p-2 rounded-xl text-sm min-h-[60px]"
+        />
+        <ErrorMessage
+          name="description"
           component="div"
           className="text-red-500 text-sm"
         />

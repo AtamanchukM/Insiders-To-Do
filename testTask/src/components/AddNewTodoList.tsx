@@ -18,12 +18,14 @@ export default function AddNewTodoList({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 flex flex-col mb-4">
+    <form onSubmit={handleSubmit} className="space-y-4  flex items-center justify-between mb-4 border p-4 mx-auto rounded-xl max-w-xl w-full">
       <input
+        id="title"
+        type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Назва нового списку"
-        className="w-full border border-gray-300 p-2 rounded-xl"
+        className="w-full max-w-[200px]  p-2 m-0"
       />
       <button
         type="submit"

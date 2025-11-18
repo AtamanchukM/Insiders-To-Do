@@ -4,7 +4,6 @@ import { useAuthStore } from "../store/useAuthStore";
 import AddTodo from "../components/AddTodo";
 import ChangeTodo from "../components/ChangeTodo";
 import RemoveTodo from "../components/RemoveTodo";
-import RemoveTodoList from "../components/RemoveTodoList";
 
 import * as Yup from "yup";
 import { CiEdit } from "react-icons/ci";
@@ -18,15 +17,18 @@ import {
   where,
 } from "firebase/firestore";
 
+
 export type Todo = {
   id: string;
   text: string;
+  description?: string;
   completed: boolean;
   userId: string;
 };
 
 export const TodoSchema = Yup.object().shape({
   text: Yup.string().trim().required("Task cannot be empty"),
+  description: Yup.string().max(500, "Description too long").optional(),
   completed: Yup.boolean(),
 });
 
@@ -61,6 +63,7 @@ export default function TodoList({
       const todosData: Todo[] = snapshot.docs.map((doc) => ({
         id: doc.id,
         text: doc.data().text,
+        description: doc.data().description || "",
         completed: doc.data().completed,
         userId: doc.data().userId,
       }));
@@ -121,9 +124,8 @@ export default function TodoList({
   }, [title]);
 
   return (
-    <section className=" flex items-center  bg-gray-100 text-black">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md flex flex-col justify-center">
-        <div className="flex items-center justify-center mb-6 gap-2">
+      <div className="bg-white p-4 rounded shadow-md min-w-[300px] md:max-w-md sm:max-w-[320px] w-full flex flex-col justify-center text-black">
+        <div className="flex items-center justify-center mb-6 gap-2 overflow-hidden ">
           {isEditingTitle ? (
             <>
               <input
@@ -160,7 +162,7 @@ export default function TodoList({
             </>
           ) : (
             <>
-              <h2 className="text-2xl font-bold text-center">{title}</h2>
+              <h2 className="text-2xl font-bold text-center max-w-50px">{title.length > 20 ? title.slice(0, 20) + "..." : title}</h2>
               <button
                 className="ml-2 text-xl text-blue-500 hover:text-blue-700"
                 onClick={() => setIsEditingTitle(true)}
@@ -205,24 +207,31 @@ export default function TodoList({
                       }}
                       className="mr-2"
                     />
-                    <button
-                      onClick={() => setEditingId(todo.id)}
-                      className="mr-2"
-                    >
-                      <CiEdit />
-                    </button>
-                    <span
+                    <div
                       className={`flex-1 ${
                         todo.completed ? "line-through text-gray-500" : ""
                       }`}
                     >
-                      {todo.text}
-                    </span>
-                    <RemoveTodo
-                      id={todo.id}
-                      listId={listId}
-                      onRemoved={handleRemoved}
-                    />
+                      {todo.text.length > 20
+                        ? todo.text.slice(0, 20) + "..."
+                        : todo.text}
+                        {todo.description && (
+                          <p className="text-xs text-gray-600">{todo.description.length > 40 ? todo.description.slice(0, 40) + "..." : todo.description}</p>
+                        )}
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <button
+                        onClick={() => setEditingId(todo.id)}
+                        className="mr-2"
+                      >
+                        <CiEdit />
+                      </button>
+                      <RemoveTodo
+                        id={todo.id}
+                        listId={listId}
+                        onRemoved={handleRemoved}
+                      />
+                    </div>
                   </>
                 )}
               </li>
@@ -230,6 +239,5 @@ export default function TodoList({
           )}
         </ul>
       </div>
-    </section>
   );
 }
